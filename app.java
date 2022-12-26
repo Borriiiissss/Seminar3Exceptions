@@ -39,9 +39,9 @@ public class app {
     public static void inputData() throws IOException {
         System.out.println ("Введите Фамилия Имя Отчество датарождения номертелефона пол");
         Scanner sc = new Scanner(System.in);
-        // String userInput = sc.nextLine();
-        String userInput = "f 89096666321 22.12.1999 Petrov Petr Ivanych";
+        String userInput = sc.nextLine();
         String [] arr = userInput.split(" ");
+        sc.close();
         if (arr.length != 6){
             try {
                 throw new Exception("вы ввели недостаточно данных");
