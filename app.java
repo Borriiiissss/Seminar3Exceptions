@@ -1,9 +1,3 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.StringJoiner;
-
 // Напишите приложение, которое будет запрашивать у пользователя следующие данные в произвольном порядке, 
 // разделенные пробелом:
 // Фамилия Имя Отчество датарождения номертелефона пол
@@ -27,7 +21,10 @@ import java.util.StringJoiner;
 // Однофамильцы должны записаться в один и тот же файл, в отдельные строки.
 // Не забудьте закрыть соединение с файлом.
 // При возникновении проблемы с чтением-записью в файл, исключение должно быть корректно обработано, пользователь должен увидеть стектрейс ошибки.
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 public class app {
 
     static String fio = "";
@@ -43,7 +40,7 @@ public class app {
         System.out.println ("Введите Фамилия Имя Отчество датарождения номертелефона пол");
         Scanner sc = new Scanner(System.in);
         // String userInput = sc.nextLine();
-        String userInput = "f 8909A6666321 2212.1999 Иванов Иван Иваныч";
+        String userInput = "f 89096666321 22.12.1999 Petrov Petr Ivanych";
         String [] arr = userInput.split(" ");
         if (arr.length != 6){
             try {
@@ -62,14 +59,14 @@ public class app {
             if (arr[i].matches("^[0-9]*$")){
                 phoneNumber = Long.valueOf(arr[i]);
             }
-            if (arr[i].matches("^[0-9.]*$")){
+            if (arr[i].matches("^[0-9.]*$") && arr[i].length() < 11){
                 checkBirhday(arr[i]);
                 birthDay = arr[i];
             }
-            if (arr[i].matches("^[а-яА-Я]*$") & arr[i].length() > 1){
+            if (arr[i].matches("^[a-zA-Zа-яА-Я]*$") & arr[i].length() > 1){
                 fio += arr[i] + " ";
             }
-            if (arr[i].matches (".*[a-zA-Z].*") && arr[i].matches(".*[0-9].*")){
+            if (arr[i].matches (".*[a-zA-Zа-яА-Я].*") && arr[i].matches(".*[0-9].*")){
                 try {
                     throw new Exception("неверный ввод букв и цифр ");
                 } catch (Exception e) {
@@ -77,27 +74,26 @@ public class app {
                 }
             }
         }
-        File file = new File("c:/testFile1.txt");
-
-        if (file.createNewFile()){
-        System.out.println("File is created!");
+        
+        String[] familyName = fio.split(" ");
+        File file = new File(String.format("c://%s.txt", familyName[0]));
+        boolean writeOverwrite = true;
+        try {
+            if (file.createNewFile()){
+                System.out.println("File is created!");
+                writeOverwrite = false;
+                } else{
+                System.out.println("File already exists.");
+                }
+                FileWriter writer = new FileWriter (file, writeOverwrite);
+                writer.write("<" + fio + ">" + "<" + birthDay + ">" + "<" + phoneNumber + ">" + "<" + male + ">\n");
+                writer.close();
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
         }
-        else{
-        System.out.println("File already exists.");
-        }
-
-        FileWriter writer = new FileWriter (file);
-        writer.write("Test data");
-        writer.close();
-
-
-
-        // System.out.println(male);
-        // System.out.println(phoneNumber);
-        // System.out.println(birthDay);
-        // System.out.println(fio);
     }
-
+    
     public static void checkMale(char male) {
         if (male != 102 && male != 109){
             System.err.println(male);
