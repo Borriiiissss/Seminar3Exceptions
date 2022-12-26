@@ -32,8 +32,12 @@ public class app {
     static long phoneNumber;
     static char male;
 
-    public static void main(String[] args) throws IOException {
-        inputData();
+    public static void main(String[] args) {
+        try {
+            inputData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void inputData() throws IOException {
